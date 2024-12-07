@@ -43,8 +43,17 @@ func _input(event: InputEvent) -> void:
 		var s = event.as_text_keycode()
 		word += s
 		var letters = letters[word[0]]
+		var letter_sequences = []
 		for letter in letters:
+			letter_sequences.append([letter])
+		
+		for letter_sequence in letter_sequences:
+			var current: Letter = letter_sequence[0]
 			for c in word.substr(1):
+				var valid_neighbours = []
+				for neighbour in current.neighbours:
+					if neighbour.letter == c:
+						letter_seque.append()
 				var new_letters = []
 				if s in letters:
 					var found = letters[s]
