@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://ju27lbhesixa"]
+[gd_scene load_steps=2 format=3 uid="uid://ju27lbhesixa"]
 
 [ext_resource type="Script" path="res://letter.gd" id="1_a0kmb"]
 
-[sub_resource type="SystemFont" id="SystemFont_ri33n"]
-
 [node name="Letter" type="Node2D"]
 script = ExtResource("1_a0kmb")
-font = SubResource("SystemFont_ri33n")
+font_size = 20
+default_background_color = Color(0.672064, 0.672064, 0.672064, 1)
+highlighted_color = Color(1, 0.712707, 0.666561, 1)
