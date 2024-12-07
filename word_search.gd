@@ -27,14 +27,14 @@ func _ready() -> void:
 	for i in SIZE.x:
 		for j in SIZE.y:
 			var letter: Letter = cells[Vector2i(i, j)]
-			if i > 0:
-				letter.add_neighbour(cells[Vector2i(i-1, j)])
-			if j > 0:
-				letter.add_neighbour(cells[Vector2i(i, j-1)])
-			if i < SIZE.x - 1:
-				letter.add_neighbour(cells[Vector2i(i+1, j)])
-			if j < SIZE.y - 1:
-				letter.add_neighbour(cells[Vector2i(i, j+1)])
+			for rel_x in [-1, 0, 1]:
+				for rel_y in [-1, 0, 1]:
+					if rel_x == 0 and rel_y == 0:
+						continue
+					var x = i + rel_x
+					var y = j + rel_y
+					if x >= 0 and x < SIZE.x and y >= 0 and y < SIZE.y:
+						letter.add_neighbour(cells[Vector2i(x, y)])
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -75,9 +75,15 @@ func _input(event: InputEvent) -> void:
 				var valid_neighbours = []
 				for neighbour in current.neighbours:
 					if neighbour.letter == c:
-						var new_letter_sequence = letter_sequence.duplicate()
-						new_letter_sequence.append(neighbour)
-						new_letter_sequences.append(new_letter_sequence)
+						var dup = false
+						for letter in letter_sequence:
+							if letter == neighbour:
+								dup = true
+						#var dup = neighbour in letter_sequence
+						if not dup:
+							var new_letter_sequence = letter_sequence.duplicate()
+							new_letter_sequence.append(neighbour)
+							new_letter_sequences.append(new_letter_sequence)
 			letter_sequences = new_letter_sequences
 		
 		if len(letter_sequences) > 0:
