@@ -1,7 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://btoi5hk83lxol"]
+[gd_scene load_steps=3 format=3 uid="uid://btoi5hk83lxol"]
 
 [ext_resource type="Script" path="res://word_search.gd" id="1_381l8"]
+[ext_resource type="AudioStream" uid="uid://dp0iqovyu4puj" path="res://audio/c.wav" id="2_igevb"]
 
 [node name="WordSearch" type="Node2D"]
 position = Vector2(43, 37)
 script = ExtResource("1_381l8")
+
+[node name="Word" type="Label" parent="."]
+offset_left = -16.0
+offset_top = 268.0
+offset_right = 521.0
+offset_bottom = 367.0
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_igevb")

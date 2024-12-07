@@ -39,6 +39,9 @@ func add_neighbour(neighbour: Letter):
 	neighbours.append(neighbour)
 
 
-func set_found():
-	status = 1
+func set_found(found: bool):
+	if found:
+		status = 1
+	else:
+		status = 0
 	queue_redraw()
