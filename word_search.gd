@@ -10,6 +10,9 @@ const SIZE = Vector2i(10, 10)
 
 var just = [1.0, 9.0/8.0, 5.0/4.0, 4.0/3.0, 3.0/2.0, 5.0/3.0, 15.0/8.0, 2.0]
 
+var dictionary: Dictionary = {}
+var letter_sequences = []
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -23,6 +26,11 @@ func _ready() -> void:
 			else:
 				letters[letter.letter] = [letter]
 			cells[Vector2i(i, j)] = letter
+	
+	var file = FileAccess.open("res://sowpods.txt", FileAccess.READ)
+	while not file.eof_reached():
+		var line = file.get_line()
+		dictionary[line] = null
 	
 	for i in SIZE.x:
 		for j in SIZE.y:
@@ -46,6 +54,11 @@ func _input(event: InputEvent) -> void:
 		
 		if event.keycode == KEY_BACKSPACE:
 			word = word.substr(0, len(word) - 1)
+		elif event.keycode == KEY_ENTER:
+			if len(letter_sequences) > 0 and word in dictionary:
+				print("Found")
+			else:
+				print("Not found")
 		else:
 			word += s
 		
@@ -62,16 +75,14 @@ func _input(event: InputEvent) -> void:
 			return
 
 		var letters = letters[word[0]]
-		var letter_sequences = []
+		letter_sequences = []
 		for letter in letters:
 			letter_sequences.append([letter])
 		
 		for c in word.substr(1):
-			print("Letter sequences ", letter_sequences, " ", c)
 			var new_letter_sequences = []
 			for letter_sequence in letter_sequences:
 				var current: Letter = letter_sequence[-1]
-				print("Current ", current, " ", current.neighbours)
 				var valid_neighbours = []
 				for neighbour in current.neighbours:
 					if neighbour.letter == c:
