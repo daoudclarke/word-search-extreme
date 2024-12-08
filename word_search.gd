@@ -99,7 +99,7 @@ func _input(event: InputEvent) -> void:
 							letter.set_used_status(1)
 							for relative in RELATIVES:
 								var new_key = letter.location + relative
-								if new_key not in cells:
+								if new_key not in cells and new_key.x >= 0 and new_key.y >= 0 and new_key.x < SIZE.x and new_key.y < SIZE.y:
 									new_letter(new_key)
 									
 				return
