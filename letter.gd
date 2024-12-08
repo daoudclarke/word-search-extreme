@@ -9,6 +9,7 @@ class_name Letter extends Node2D
 @export var current_color: Color
 
 
+var location: Vector2i
 var letter: String
 var status: int = 0
 var used_status: int = 0

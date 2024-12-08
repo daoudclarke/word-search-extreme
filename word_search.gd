@@ -16,37 +16,64 @@ var letter_sequences = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	for i in SIZE.x:
-		for j in SIZE.y:
-			var letter = letter_scene.instantiate()
-			letter.position = Vector2(i * 25, j * 25)
-			add_child(letter)
-			if letter.letter in letters:
-				letters[letter.letter].append(letter)
-			else:
-				letters[letter.letter] = [letter]
-			cells[Vector2i(i, j)] = letter
+	for i in range((SIZE.x - 1) / 2 - 1, (SIZE.x - 1) / 2 + 2):
+		for j in range((SIZE.y - 1) / 2 - 1, (SIZE.y - 1) / 2 + 2):
+			new_letter(Vector2i(i, j))
+	
+	print("Cells", cells)
 	
 	var file = FileAccess.open("res://sowpods.txt", FileAccess.READ)
 	while not file.eof_reached():
 		var line = file.get_line()
 		dictionary[line] = null
 	
-	for i in SIZE.x:
-		for j in SIZE.y:
-			var letter: Letter = cells[Vector2i(i, j)]
-			for rel_x in [-1, 0, 1]:
-				for rel_y in [-1, 0, 1]:
-					if rel_x == 0 and rel_y == 0:
-						continue
-					var x = i + rel_x
-					var y = j + rel_y
-					if x >= 0 and x < SIZE.x and y >= 0 and y < SIZE.y:
-						letter.add_neighbour(cells[Vector2i(x, y)])
+	#for key in cells:
+		#var i = key.x
+		#var j = key.y
+		#var letter: Letter = cells[key]
+		#for rel_x in [-1, 0, 1]:
+			#for rel_y in [-1, 0, 1]:
+				#if rel_x == 0 and rel_y == 0:
+					#continue
+				#var x = i + rel_x
+				#var y = j + rel_y
+				#var new_key = Vector2i(x, y)
+				#if new_key in cells:
+					#letter.add_neighbour(cells[new_key])
+
+
+func new_letter(location: Vector2i):
+	var letter: Letter = letter_scene.instantiate()
+	letter.location = location
+	letter.position = 25.0 * location
+	add_child(letter)
+	if letter.letter in letters:
+		letters[letter.letter].append(letter)
+	else:
+		letters[letter.letter] = [letter]
+	cells[location] = letter
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+
+const RELATIVES = [
+	Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1),
+	Vector2i(0, -1), Vector2i(0, 1),
+	Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
+
+func get_neighbours(location: Vector2i) -> Array[Letter]:
+	var neighbours: Array[Letter] = []
+	for relative in RELATIVES:
+		var new_key = location + relative
+		print("New key",location, new_key)
+		if new_key in cells:
+			neighbours.append(cells[new_key])
+	print("Found neighbours", neighbours)
+	return neighbours
+
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
@@ -67,8 +94,14 @@ func _input(event: InputEvent) -> void:
 				
 				letter_sequences.shuffle()
 				for sequence in letter_sequences:
-					for letter in sequence:
-						letter.set_used_status(1)
+					for letter: Letter in sequence:
+						if letter.used_status == 0:
+							letter.set_used_status(1)
+							for relative in RELATIVES:
+								var new_key = letter.location + relative
+								if new_key not in cells:
+									new_letter(new_key)
+									
 				return
 			else:
 				print("Not found")
@@ -93,7 +126,7 @@ func _input(event: InputEvent) -> void:
 			for letter_sequence in letter_sequences:
 				var current: Letter = letter_sequence[-1]
 				var valid_neighbours = []
-				for neighbour in current.neighbours:
+				for neighbour in get_neighbours(current.location):
 					if neighbour.letter == c:
 						var dup = false
 						for letter in letter_sequence:
