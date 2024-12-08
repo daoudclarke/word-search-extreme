@@ -6,6 +6,7 @@ class_name Letter extends Node2D
 @export var font_size: int = 16
 @export var default_background_color: Color
 @export var highlighted_color: Color
+@export var current_color: Color
 
 
 var letter: String
@@ -31,6 +32,7 @@ func _draw():
 	match status:
 		0: color = default_background_color
 		1: color = highlighted_color
+		2: color = current_color
 	draw_circle(Vector2.ZERO, 12, color)
 	draw_string(font, Vector2(-0.5*size.x, 0.3*size.y), letter, 0, -1, font_size, Color("black"))
 	
@@ -39,9 +41,6 @@ func add_neighbour(neighbour: Letter):
 	neighbours.append(neighbour)
 
 
-func set_found(found: bool):
-	if found:
-		status = 1
-	else:
-		status = 0
+func set_status(value: int):
+	status = value
 	queue_redraw()

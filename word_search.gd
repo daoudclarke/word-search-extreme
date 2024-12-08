@@ -53,7 +53,7 @@ func _input(event: InputEvent) -> void:
 	
 		for key in cells:
 			var letter = cells[key]
-			letter.set_found(false)
+			letter.set_status(0)
 		
 		if len(word) == 0:
 			return
@@ -97,5 +97,9 @@ func _input(event: InputEvent) -> void:
 			$AudioStreamPlayer2D.play()
 
 		for letter_sequence in letter_sequences:
-			for letter in letter_sequence:
-				letter.set_found(true)
+			for i in range(len(letter_sequence)):
+				var letter = letter_sequence[i]
+				if i == len(letter_sequence) - 1:
+					letter.set_status(2)
+				else:
+					letter.set_status(1)
