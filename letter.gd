@@ -52,3 +52,7 @@ func set_status(value: int):
 func set_used_status(value: int):
 	used_status = value
 	queue_redraw()
+
+func set_letter(s: String):
+	letter = s
+	queue_redraw()

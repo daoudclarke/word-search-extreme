@@ -41,12 +41,23 @@ func _ready() -> void:
 				#if new_key in cells:
 					#letter.add_neighbour(cells[new_key])
 
+const WILDCARD_LOCATIONS = {
+	Vector2i(1, 1): null, Vector2i(1, 5): null, Vector2i(1, 9): null,
+	Vector2i(5, 1): null, Vector2i(5, 5): null, Vector2i(5, 9): null,
+	Vector2i(9, 1): null, Vector2i(9, 5): null, Vector2i(9, 9): null,
+}
 
 func new_letter(location: Vector2i):
 	var letter: Letter = letter_scene.instantiate()
 	letter.location = location
 	letter.position = 25.0 * location
+
 	add_child(letter)
+
+	if location in WILDCARD_LOCATIONS:
+		print("Wildcard", location)
+		letter.set_letter("")
+
 	if letter.letter in letters:
 		letters[letter.letter].append(letter)
 	else:
@@ -87,13 +98,11 @@ func _input(event: InputEvent) -> void:
 			word = word.substr(0, len(word) - 1)
 		elif event.keycode == KEY_ENTER:
 			if len(letter_sequences) > 0 and word in dictionary:
-				print("Found")
 				$FoundWords.text += word + "\n"
-				word = ""
-				$Word.text = word
 				
 				letter_sequences.shuffle()
 				for sequence in letter_sequences:
+					var i = 0
 					for letter: Letter in sequence:
 						if letter.used_status == 0:
 							letter.set_used_status(1)
@@ -101,10 +110,13 @@ func _input(event: InputEvent) -> void:
 								var new_key = letter.location + relative
 								if new_key not in cells and new_key.x >= 0 and new_key.y >= 0 and new_key.x < SIZE.x and new_key.y < SIZE.y:
 									new_letter(new_key)
-									
+						if letter.letter == "":
+							letter.set_letter(word[i])
+						i += 1
+
+				word = ""
+				$Word.text = word
 				return
-			else:
-				print("Not found")
 		else:
 			word += s
 		
@@ -127,7 +139,7 @@ func _input(event: InputEvent) -> void:
 				var current: Letter = letter_sequence[-1]
 				var valid_neighbours = []
 				for neighbour in get_neighbours(current.location):
-					if neighbour.letter == c:
+					if neighbour.letter == c or neighbour.letter == "": 
 						var dup = false
 						for letter in letter_sequence:
 							if letter == neighbour:
