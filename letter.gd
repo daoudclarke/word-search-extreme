@@ -11,6 +11,7 @@ class_name Letter extends Node2D
 
 var letter: String
 var status: int = 0
+var used_status: int = 0
 var neighbours: Array[Letter] = []
 
 # Called when the node enters the scene tree for the first time.
@@ -34,6 +35,8 @@ func _draw():
 		1: color = highlighted_color
 		2: color = current_color
 	draw_circle(Vector2.ZERO, 12, color)
+	if used_status > 0:
+		draw_circle(Vector2.ZERO, 12, Color("black"), false, 2)
 	draw_string(font, Vector2(-0.5*size.x, 0.3*size.y), letter, 0, -1, font_size, Color("black"))
 	
 
@@ -43,4 +46,8 @@ func add_neighbour(neighbour: Letter):
 
 func set_status(value: int):
 	status = value
+	queue_redraw()
+
+func set_used_status(value: int):
+	used_status = value
 	queue_redraw()

@@ -6,7 +6,7 @@ var word: String = ""
 
 var cells = {}
 
-const SIZE = Vector2i(10, 10)
+const SIZE = Vector2i(11, 11)
 
 var just = [1.0, 9.0/8.0, 5.0/4.0, 4.0/3.0, 3.0/2.0, 5.0/3.0, 15.0/8.0, 2.0]
 
@@ -64,6 +64,11 @@ func _input(event: InputEvent) -> void:
 				$FoundWords.text += word + "\n"
 				word = ""
 				$Word.text = word
+				
+				letter_sequences.shuffle()
+				for sequence in letter_sequences:
+					for letter in sequence:
+						letter.set_used_status(1)
 				return
 			else:
 				print("Not found")

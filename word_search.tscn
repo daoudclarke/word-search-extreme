@@ -7,17 +7,36 @@
 position = Vector2(43, 37)
 script = ExtResource("1_381l8")
 
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -43.0
+offset_top = -39.0
+offset_right = 598.0
+offset_bottom = 443.0
+
+[node name="ColorRect3" type="ColorRect" parent="."]
+offset_left = -3.0
+offset_top = 272.0
+offset_right = 334.0
+offset_bottom = 385.0
+color = Color(0.358988, 3.00817e-07, 9.62615e-08, 1)
+
 [node name="Word" type="Label" parent="."]
-offset_left = -16.0
-offset_top = 268.0
-offset_right = 521.0
-offset_bottom = 367.0
+offset_left = 11.0
+offset_top = 284.0
+offset_right = 548.0
+offset_bottom = 383.0
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("2_igevb")
 
+[node name="ColorRect2" type="ColorRect" parent="."]
+offset_left = 413.0
+offset_top = -29.0
+offset_right = 589.0
+offset_bottom = 431.0
+color = Color(0, 0, 1, 1)
+
 [node name="FoundWords" type="Label" parent="."]
-offset_left = 429.0
-offset_top = -10.0
+offset_left = 439.0
 offset_right = 573.0
 offset_bottom = 401.0
