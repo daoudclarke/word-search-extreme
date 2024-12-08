@@ -51,23 +51,27 @@ func _process(delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		var s = event.as_text_keycode()
+	
+		for key in cells:
+			var letter = cells[key]
+			letter.set_status(0)
 		
 		if event.keycode == KEY_BACKSPACE:
 			word = word.substr(0, len(word) - 1)
 		elif event.keycode == KEY_ENTER:
 			if len(letter_sequences) > 0 and word in dictionary:
 				print("Found")
+				$FoundWords.text += word + "\n"
+				word = ""
+				$Word.text = word
+				return
 			else:
 				print("Not found")
 		else:
 			word += s
 		
 		$Word.text = word
-	
-		for key in cells:
-			var letter = cells[key]
-			letter.set_status(0)
-		
+			
 		if len(word) == 0:
 			return
 		
