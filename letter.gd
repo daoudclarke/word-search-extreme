@@ -21,24 +21,22 @@ func _ready() -> void:
 		letter = "ETAONRISH"[randi_range(0, 8)]
 	else:
 		letter = "BCDFGJKLMPQUVWXYZ"[randi_range(0, 16)]
+	set_status(0)
+	set_letter(letter)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+#func _process(delta: float) -> void:
+	#pass
 
 
-func _draw():
-	var size = font.get_string_size(letter, 0, -1, font_size)
-	var color: Color
-	match status:
-		0: color = default_background_color
-		1: color = highlighted_color
-		2: color = current_color
-	draw_circle(Vector2.ZERO, 12, color)
-	if used_status > 0:
-		draw_circle(Vector2.ZERO, 12, Color("black"), false, 2)
-	draw_string(font, Vector2(-0.5*size.x, 0.3*size.y), letter, 0, -1, font_size, Color("black"))
+#func _draw():
+	#var size = font.get_string_size(letter, 0, -1, font_size)
+	##draw_rect(Rect2(2, 2, 11, 12), color)
+	##draw_circle(Vector2.ZERO, 12, color)
+	##if used_status > 0:
+		##draw_circle(Vector2.ZERO, 12, Color("black"), false, 2)
+	#draw_string(font, Vector2(-10, 10), letter, 0, -1, font_size, Color("black"))
 	
 
 func add_neighbour(neighbour: Letter):
@@ -47,6 +45,12 @@ func add_neighbour(neighbour: Letter):
 
 func set_status(value: int):
 	status = value
+	var color: Color
+	match status:
+		0: color = default_background_color
+		1: color = highlighted_color
+		2: color = current_color
+	$ColorRect.color = color
 	queue_redraw()
 
 func set_used_status(value: int):
@@ -55,4 +59,5 @@ func set_used_status(value: int):
 
 func set_letter(s: String):
 	letter = s
+	$Label.text = s
 	queue_redraw()

@@ -50,7 +50,7 @@ const WILDCARD_LOCATIONS = {
 func new_letter(location: Vector2i):
 	var letter: Letter = letter_scene.instantiate()
 	letter.location = location
-	letter.position = 25.0 * location
+	letter.position = Vector2(14 * location.x, 15*location.y)
 
 	add_child(letter)
 
