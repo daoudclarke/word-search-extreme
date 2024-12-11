@@ -1,17 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://ju27lbhesixa"]
+[gd_scene load_steps=4 format=3 uid="uid://ju27lbhesixa"]
 
 [ext_resource type="Script" path="res://letter.gd" id="1_a0kmb"]
-[ext_resource type="Texture2D" uid="uid://cjetcd2qdfujx" path="res://img/tile.png" id="1_yl6ob"]
 [ext_resource type="FontFile" uid="uid://bkkfrghux07sr" path="res://Abaddon Bold.ttf" id="2_cja8l"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_jdp5c"]
 font = ExtResource("2_cja8l")
 font_color = Color(0, 0, 0, 1)
 
-[node name="Letter" type="Sprite2D"]
+[node name="Letter" type="Node2D"]
 self_modulate = Color(0.32549, 0.356863, 0.396078, 1)
 texture_filter = 1
-texture = ExtResource("1_yl6ob")
 script = ExtResource("1_a0kmb")
 font = ExtResource("2_cja8l")
 default_background_color = Color(0.772549, 0.686275, 0.643137, 1)
