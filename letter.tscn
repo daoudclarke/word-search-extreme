@@ -1,35 +1,66 @@
-[gd_scene load_steps=4 format=3 uid="uid://ju27lbhesixa"]
+[gd_scene load_steps=7 format=3 uid="uid://ju27lbhesixa"]
 
 [ext_resource type="Script" path="res://letter.gd" id="1_a0kmb"]
 [ext_resource type="FontFile" uid="uid://bkkfrghux07sr" path="res://Abaddon Bold.ttf" id="2_cja8l"]
+[ext_resource type="FontFile" uid="uid://ek174ejk72jh" path="res://Ubuntu-Medium.ttf" id="3_ke7xd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u1qck"]
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="Theme" id="Theme_sthtt"]
+/styles/Rounded = SubResource("StyleBoxFlat_u1qck")
 
 [sub_resource type="LabelSettings" id="LabelSettings_jdp5c"]
-font = ExtResource("2_cja8l")
+font = ExtResource("3_ke7xd")
+font_size = 48
 font_color = Color(0, 0, 0, 1)
+outline_size = 10
+shadow_size = 0
+shadow_color = Color(0, 0, 0, 0.396078)
+shadow_offset = Vector2(0, 0)
 
 [node name="Letter" type="Node2D"]
 self_modulate = Color(0.32549, 0.356863, 0.396078, 1)
 texture_filter = 1
 script = ExtResource("1_a0kmb")
 font = ExtResource("2_cja8l")
-default_background_color = Color(0.772549, 0.686275, 0.643137, 1)
-highlighted_color = Color(0.875199, 0.403973, 1, 1)
-current_color = Color(0.860051, 0.000100401, 0.693562, 1)
+default_background_color = Color(0.439216, 0.839216, 1, 1)
+highlighted_color = Color(0, 0.686275, 0.960784, 1)
+current_color = Color(0, 0.572549, 0.8, 1)
+unused_color = Color(0.439216, 0.839216, 1, 1)
+used_color = Color(1, 0.439216, 0.65098, 1)
+used_5_color = Color(1, 0.278431, 0.556863, 1)
+used_7_color = Color(0.960784, 0, 0.368627, 1)
 
 [node name="ColorRect" type="ColorRect" parent="."]
-anchors_preset = -1
-offset_left = -6.0
-offset_top = -6.0
-offset_right = 5.0
-offset_bottom = 6.0
+visible = false
+offset_right = 64.0
+offset_bottom = 64.0
+theme = SubResource("Theme_sthtt")
 color = Color(0.772549, 0.686275, 0.643137, 1)
 
+[node name="Outline" type="Polygon2D" parent="."]
+z_index = 10
+color = Color(0.439216, 0.839216, 1, 1)
+polygon = PackedVector2Array(28, -20, 28, 20, 20, 28, -20, 28, -28, 20, -28, -20, -20, -28, 20, -28)
+
+[node name="Tile" type="Polygon2D" parent="."]
+z_index = 20
+scale = Vector2(0.786, 0.786)
+color = Color(0.839216, 0.952941, 1, 1)
+polygon = PackedVector2Array(28, -20, 28, 20, 20, 28, -20, 28, -28, 20, -28, -20, -20, -28, 20, -28)
+
 [node name="Label" type="Label" parent="."]
-z_index = 1
-texture_filter = 1
-offset_left = -6.0
-offset_top = -7.0
-offset_right = 35.0
-offset_bottom = 17.0
-text = "A"
+z_index = 30
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+text = "H"
 label_settings = SubResource("LabelSettings_jdp5c")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
