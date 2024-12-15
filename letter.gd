@@ -35,30 +35,21 @@ func _ready() -> void:
 		letter = "BCDFGJKLMPQUVWXYZ"[randi_range(0, 16)]
 	set_status(0)
 	set_letter(letter)
-
-	#label_default = $Label.label_settings
-	#label_highlight = $Label.label_settings.copy()
-	#label_highlight.shadow_offset = Vector2(3, 3)
-	#var outline = Polygon2D.new()
-	#outline.polygon = $Tile.polygon
-	#outline.scale = Vector2(1, 1)
-	#outline.z_index = 0
-	#outline.name = "Outline"
-	#add_child(outline)
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta: float) -> void:
-	#pass
-
-
-#func _draw():
-	#var size = font.get_string_size(letter, 0, -1, font_size)
-	##draw_rect(Rect2(2, 2, 11, 12), color)
-	##draw_circle(Vector2.ZERO, 12, color)
-	##if used_status > 0:
-		##draw_circle(Vector2.ZERO, 12, Color("black"), false, 2)
-	#draw_string(font, Vector2(-10, 10), letter, 0, -1, font_size, Color("black"))
+	scale = Vector2(0, 0)
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "scale", Vector2(1.2, 1.2), 0.5)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.5)
+	
+	rotation = -2*PI
+	var tween2 = create_tween()
+	tween2.set_trans(Tween.TRANS_SINE)
+	tween2.set_ease(Tween.EASE_OUT)
+	tween2.tween_property(self, "rotation", 0.2, 0.5)
+	tween2.set_ease(Tween.EASE_IN_OUT)
+	tween2.tween_property(self, "rotation", 0, 0.5)
 	
 
 func add_neighbour(neighbour: Letter):
