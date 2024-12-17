@@ -27,6 +27,8 @@ var label_highlight: LabelSettings
 
 const outline_scale = (56.0 + 1.0)/56.0
 # print("Outline scale", outline_scale)
+const JUST = [1.0, 9.0/8.0, 5.0/4.0, 4.0/3.0, 3.0/2.0, 5.0/3.0, 15.0/8.0, 2.0]
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -94,3 +96,17 @@ func set_letter(s: String):
 	letter = s
 	$Label.text = s
 	queue_redraw()
+
+
+func play_note_delayed(pitch: int, delay: float):
+	var tween = create_tween()
+	tween.tween_callback(play_note.bind(pitch)).set_delay(delay)
+
+func play_note(pitch: int):
+	var pitch_scale = 1.0
+	while pitch > 7:
+		pitch_scale *= 2
+		pitch -= 7
+	pitch_scale *= JUST[pitch]
+	$AudioStreamPlayer2D.pitch_scale = pitch_scale
+	$AudioStreamPlayer2D.play()

@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://ju27lbhesixa"]
+[gd_scene load_steps=10 format=3 uid="uid://ju27lbhesixa"]
 
 [ext_resource type="Script" path="res://letter.gd" id="1_a0kmb"]
 [ext_resource type="FontFile" uid="uid://bkkfrghux07sr" path="res://Abaddon Bold.ttf" id="2_cja8l"]
 [ext_resource type="FontFile" uid="uid://ek174ejk72jh" path="res://Ubuntu-Medium.ttf" id="3_ke7xd"]
 [ext_resource type="Texture2D" uid="uid://vnx8c6h1skdm" path="res://tile.png" id="4_ibk8s"]
 [ext_resource type="Texture2D" uid="uid://c0qh122eimv6c" path="res://outline.png" id="5_4fsco"]
+[ext_resource type="AudioStream" uid="uid://dp0iqovyu4puj" path="res://audio/c.wav" id="6_i5us1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u1qck"]
 corner_radius_top_left = 20
@@ -68,3 +69,6 @@ texture = ExtResource("4_ibk8s")
 
 [node name="Outline" type="Sprite2D" parent="."]
 texture = ExtResource("5_4fsco")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_i5us1")
