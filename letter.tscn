@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://ju27lbhesixa"]
+[gd_scene load_steps=9 format=3 uid="uid://ju27lbhesixa"]
 
 [ext_resource type="Script" path="res://letter.gd" id="1_a0kmb"]
 [ext_resource type="FontFile" uid="uid://bkkfrghux07sr" path="res://Abaddon Bold.ttf" id="2_cja8l"]
 [ext_resource type="FontFile" uid="uid://ek174ejk72jh" path="res://Ubuntu-Medium.ttf" id="3_ke7xd"]
+[ext_resource type="Texture2D" uid="uid://vnx8c6h1skdm" path="res://tile.png" id="4_ibk8s"]
+[ext_resource type="Texture2D" uid="uid://c0qh122eimv6c" path="res://outline.png" id="5_4fsco"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u1qck"]
 corner_radius_top_left = 20
@@ -30,7 +32,7 @@ font = ExtResource("2_cja8l")
 default_background_color = Color(0.439216, 0.839216, 1, 1)
 highlighted_color = Color(0, 0.686275, 0.960784, 1)
 current_color = Color(0, 0.572549, 0.8, 1)
-unused_color = Color(0.439216, 0.839216, 1, 1)
+unused_color = Color(0.31, 0.31, 0.31, 1)
 used_color = Color(1, 0.439216, 0.65098, 1)
 used_5_color = Color(1, 0.278431, 0.556863, 1)
 used_7_color = Color(0.960784, 0, 0.368627, 1)
@@ -42,12 +44,8 @@ offset_bottom = 64.0
 theme = SubResource("Theme_sthtt")
 color = Color(0.772549, 0.686275, 0.643137, 1)
 
-[node name="Outline" type="Polygon2D" parent="."]
-z_index = 10
-color = Color(0.439216, 0.839216, 1, 1)
-polygon = PackedVector2Array(28, -20, 28, 20, 20, 28, -20, 28, -28, 20, -28, -20, -20, -28, 20, -28)
-
 [node name="Tile" type="Polygon2D" parent="."]
+visible = false
 z_index = 20
 scale = Vector2(0.786, 0.786)
 color = Color(0.839216, 0.952941, 1, 1)
@@ -64,3 +62,9 @@ label_settings = SubResource("LabelSettings_jdp5c")
 horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("4_ibk8s")
+
+[node name="Outline" type="Sprite2D" parent="."]
+texture = ExtResource("5_4fsco")

@@ -16,9 +16,11 @@ var letter_sequences = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var delay = 0.0
 	for i in range((SIZE.x - 1) / 2 - 1, (SIZE.x - 1) / 2 + 2):
 		for j in range((SIZE.y - 1) / 2 - 1, (SIZE.y - 1) / 2 + 2):
-			new_letter(Vector2i(i, j))
+			new_letter(Vector2i(i, j), delay)
+			delay += 0.1
 	
 	print("Cells", cells)
 	
@@ -47,9 +49,10 @@ const WILDCARD_LOCATIONS = {
 	Vector2i(9, 1): null, Vector2i(9, 5): null, Vector2i(9, 9): null,
 }
 
-func new_letter(location: Vector2i):
+func new_letter(location: Vector2i, delay: float):
 	var letter: Letter = letter_scene.instantiate()
 	letter.location = location
+	letter.delay = delay
 	letter.position = Vector2(64 * location.x, 64*location.y)
 
 	add_child(letter)
@@ -103,13 +106,15 @@ func _input(event: InputEvent) -> void:
 				letter_sequences.shuffle()
 				for sequence in letter_sequences:
 					var i = 0
+					var delay = 0.0
 					for letter: Letter in sequence:
 						if letter.used_status == 0:
 							letter.set_used_status(1)
 							for relative in RELATIVES:
 								var new_key = letter.location + relative
 								if new_key not in cells and new_key.x >= 0 and new_key.y >= 0 and new_key.x < SIZE.x and new_key.y < SIZE.y:
-									new_letter(new_key)
+									new_letter(new_key, delay)
+									delay += 0.1
 						if letter.letter == "":
 							letter.set_letter(word[i])
 						i += 1

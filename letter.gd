@@ -14,6 +14,7 @@ class_name Letter extends Node2D
 @export var used_7_color: Color
 
 
+var delay: float
 var location: Vector2i
 var letter: String
 var status: int = 0
@@ -34,9 +35,11 @@ func _ready() -> void:
 	else:
 		letter = "BCDFGJKLMPQUVWXYZ"[randi_range(0, 16)]
 	set_status(0)
+	set_used_status(0)
 	set_letter(letter)
 	scale = Vector2(0, 0)
 	var tween = create_tween()
+	tween.tween_interval(delay)
 	tween.set_trans(Tween.TRANS_SINE)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "scale", Vector2(1.2, 1.2), 0.5)
@@ -45,6 +48,7 @@ func _ready() -> void:
 	
 	rotation = -2*PI
 	var tween2 = create_tween()
+	tween2.tween_interval(delay)
 	tween2.set_trans(Tween.TRANS_SINE)
 	tween2.set_ease(Tween.EASE_OUT)
 	tween2.tween_property(self, "rotation", 0.2, 0.5)
@@ -63,11 +67,12 @@ func set_status(value: int):
 		0: color = default_background_color
 		1: color = highlighted_color
 		2: color = current_color
-	$Tile.color = color
+	#$Tile.color = color
+	$Sprite2D.self_modulate = color
 	
 	if status > 0:
 		$Label.label_settings = $Label.label_settings.duplicate()
-		$Label.label_settings.shadow_offset = Vector2(4, 3)
+		$Label.label_settings.shadow_offset = Vector2(5, 4)
 	else:
 		$Label.label_settings.shadow_offset = Vector2(0, 0)
 	
@@ -82,7 +87,7 @@ func set_used_status(value: int):
 		2: color = used_5_color
 		3: color = used_7_color
 	z_index = 10 + used_status
-	$Outline.color = color
+	$Outline.self_modulate = color
 	queue_redraw()
 
 func set_letter(s: String):
