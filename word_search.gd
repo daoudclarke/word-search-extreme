@@ -27,6 +27,7 @@ func _ready() -> void:
 			big_words.append(line)
 
 	var start_word = big_words[randi_range(0, len(big_words) - 1)]
+	print("Start word: ", start_word)
 
 	var letter_index = {"": []}
 	for j in range((SIZE.x - 1) / 2 - 1, (SIZE.x - 1) / 2 + 2):
@@ -159,10 +160,15 @@ func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences:
 
 	var word_letters = []
 	for i in range(len(word)):
-		word_letters.append(letter_index.get(word[i], []) + letter_index.get("", []))
+		var letters_for_word = letter_index.get(word[i], []) + letter_index.get("", [])
+		if len(letters_for_word) == 0:
+			return []
+		word_letters.append(letters_for_word)
+		
 
 	while true:
-		indexes.append(0)
+		if len(indexes) < len(word):
+			indexes.append(0)
 		var i = len(indexes) - 1
 		var letter = word[i]
 		var new_letter_location = word_letters[i][indexes[i]]
@@ -170,16 +176,20 @@ func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences:
 		if i > 0:
 			var old_letter_location = word_letters[i - 1][indexes[i - 1]]
 			var neighbours = get_neighbours(old_letter_location)
+			
 			if new_letter_location not in neighbours:
 				skip = true
+			#else:
+				#for j in range(len(indexes)):
+					#if word_letters[j][indexes[j]] == new_letter_location:
+						#skip = true
 
-		if len(indexes) == len(word):
+		if not skip and len(indexes) == len(word):
 			# We have completed a sequence
 			var sequence = []
 			for j in range(len(indexes)):
 				sequence.append(word_letters[j][indexes[j]])
 			sequences.append(sequence)
-			indexes.pop_back()
 			skip = true
 			if len(sequences) >= max_sequences:
 				break
