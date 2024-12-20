@@ -146,7 +146,7 @@ func _input(event: InputEvent) -> void:
 
 		for letter_sequence in letter_sequences:
 			for i in range(len(letter_sequence)):
-				var letter = letter_sequence[i]
+				var letter = cells[letter_sequence[i]]
 				if i == len(letter_sequence) - 1:
 					letter.set_status(2)
 				else:
@@ -155,46 +155,45 @@ func _input(event: InputEvent) -> void:
 
 func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences: int) -> Array:
 	var sequences = []
-	var indexes = [0]
-	var sequence = []
+	var indexes = []
 
 	var word_letters = []
 	for i in range(len(word)):
 		word_letters.append(letter_index.get(word[i], []) + letter_index.get("", []))
 
 	while true:
+		indexes.append(0)
 		var i = len(indexes) - 1
 		var letter = word[i]
-		var letter_locations = word_letters[i]
-		var new_letter_location = letter_locations[indexes[i]]
+		var new_letter_location = word_letters[i][indexes[i]]
 		var skip = false
-		var found = false
 		if i > 0:
-			var old_letter_location = sequence[len(sequence) - 1]
+			var old_letter_location = word_letters[i - 1][indexes[i - 1]]
 			var neighbours = get_neighbours(old_letter_location)
-			if new_letter_location in neighbours:
-				sequence.append(new_letter_location)
-				found = true
-			if not found:
+			if new_letter_location not in neighbours:
 				skip = true
-		else:
-			sequence.append(new_letter_location)
-			indexes.append(0)
 
-		if len(sequence) == len(word):
+		if len(indexes) == len(word):
 			# We have completed a sequence
-			sequences.append(sequence.duplicate())
+			var sequence = []
+			for j in range(len(indexes)):
+				sequence.append(word_letters[j][indexes[j]])
+			sequences.append(sequence)
 			indexes.pop_back()
 			skip = true
 			if len(sequences) >= max_sequences:
 				break
+
 		if skip:
-			indexes[-1] += 1
 			if len(indexes) == 0:
 				break
+			indexes[-1] += 1
 			while indexes[-1] >= len(word_letters[len(indexes) - 1]):
 				indexes.pop_back()
-				sequence.pop_back()
+				if len(indexes) == 0:
+					print("Found sequences while popping", sequences)
+					return sequences
+				
 				indexes[-1] += 1
 
 	print("Found sequences", sequences)
