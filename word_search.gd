@@ -251,7 +251,8 @@ func update_with_word(word: String, letter_sequences: Array):
 		var delay = 0.0
 		for sequence in letter_sequences:
 			var i = 0
-			for letter: Letter in sequence:
+			for location: Vector2i in sequence:
+				var letter = cells[location]
 				if letter.used_status == 0:
 					letter.set_used_status(1)
 					for relative in RELATIVES:
