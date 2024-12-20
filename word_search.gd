@@ -156,7 +156,7 @@ func _input(event: InputEvent) -> void:
 
 func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences: int) -> Array:
 	var sequences = []
-	var indexes = []
+	var indexes = [0]
 
 	var word_letters = []
 	for i in range(len(word)):
@@ -167,8 +167,6 @@ func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences:
 		
 
 	while true:
-		if len(indexes) < len(word):
-			indexes.append(0)
 		var i = len(indexes) - 1
 		var letter = word[i]
 		var new_letter_location = word_letters[i][indexes[i]]
@@ -179,10 +177,10 @@ func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences:
 			
 			if new_letter_location not in neighbours:
 				skip = true
-			#else:
-				#for j in range(len(indexes)):
-					#if word_letters[j][indexes[j]] == new_letter_location:
-						#skip = true
+			else:
+				for j in range(len(indexes) - 1):
+					if word_letters[j][indexes[j]] == new_letter_location:
+						skip = true
 
 		if not skip and len(indexes) == len(word):
 			# We have completed a sequence
@@ -205,6 +203,8 @@ func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences:
 					return sequences
 				
 				indexes[-1] += 1
+		else:
+			indexes.append(0)
 
 	print("Found sequences", sequences)
 	return sequences
