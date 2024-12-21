@@ -51,34 +51,44 @@ func initialise_board():
 	
 	var sequences = get_letter_sequences(start_word, letter_index, 1)
 
-	letter_index[""] = []
+	
 	update_board_with_word(start_word, sequences[0], letter_index)
 
-	for location in sequences[0]:
-		var neighbours = get_neighbours(location)
-		for neighbour in neighbours:
-			if neighbour not in letter_index[""]:
-				letter_index[""].append(neighbour)
+	for j in range(1):
+		for location in sequences[0]:
+			var neighbours = get_neighbours(location)
+			for neighbour in neighbours:
+				if neighbour not in letter_index[""]:
+					letter_index[""].append(neighbour)
 
-	for j in range(10):
 		var word = big_words[randi_range(0, len(big_words) - 1)]
 		sequences = get_letter_sequences(word, letter_index, 1)
 		if len(sequences) > 0:
 			update_board_with_word(word, sequences[0], letter_index)
+	
+	for k in letter_index:
+		for location in letter_index[k]:
+			cell_letters[location] = k
 
 
 func update_board_with_word(word: String, sequence: Array, letter_index: Dictionary):
 	print("Updating board with word: ", word)
-	print("Board before ", cell_letters)
+	print("Using sequence: ", sequence)
+	print("Board before ", letter_index)
 	var i = 0
 	for location in sequence:
-		cell_letters[location] = word[i]
 		if word[i] not in letter_index:
 			letter_index[word[i]] = [location]
 		else:
 			letter_index[word[i]].append(location)
 		i += 1
-	print("Board after ", cell_letters)
+
+	var new_wildcards = []
+	for location in letter_index[""]:
+		if location not in sequence:
+			new_wildcards.append(location)
+	letter_index[""] = new_wildcards
+	print("Board after ", letter_index)
 	
 
 
