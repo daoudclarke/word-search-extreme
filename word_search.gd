@@ -14,6 +14,7 @@ var pitches = [0, 2, 4, 1, 3, 5, 2, 4, 6, 3, 5, 7, 4, 6, 8, 5, 7, 9]
 
 var dictionary: Dictionary = {}
 var letter_sequences = []
+var start_words = []
 var big_words = []
 
 
@@ -24,23 +25,11 @@ func _ready() -> void:
 		var line = file.get_line()
 		dictionary[line] = null
 		if len(line) == 9:
+			start_words.append(line)
+		if len(line) >= 7 and len(line) <= 10:
 			big_words.append(line)
 
-	var start_word = big_words[randi_range(0, len(big_words) - 1)]
-	print("Start word: ", start_word)
-
-	var letter_index = {"": []}
-	for j in range((SIZE.x - 1) / 2 - 1, (SIZE.x - 1) / 2 + 2):
-		for k in range((SIZE.y - 1) / 2 - 1, (SIZE.y - 1) / 2 + 2):
-			letter_index[""].append(Vector2i(j, k))
-	
-	var sequences = get_letter_sequences(start_word, letter_index, 1)
-	sequences.shuffle()
-
-	var i = 0
-	for location in sequences[0]:
-		cell_letters[location] = start_word[i]
-		i += 1
+	initialise_board()
 
 	var delay = 0.0
 	var count = 0
@@ -50,20 +39,48 @@ func _ready() -> void:
 			delay += 0.1
 			count += 1
 	
+
+func initialise_board():
+	var start_word = start_words[randi_range(0, len(start_words) - 1)]
+	print("Start word: ", start_word)
+
+	var letter_index = {"": []}
+	for j in range((SIZE.x - 1) / 2 - 1, (SIZE.x - 1) / 2 + 2):
+		for k in range((SIZE.y - 1) / 2 - 1, (SIZE.y - 1) / 2 + 2):
+			letter_index[""].append(Vector2i(j, k))
 	
-	#for key in cells:
-		#var i = key.x
-		#var j = key.y
-		#var letter: Letter = cells[key]
-		#for rel_x in [-1, 0, 1]:
-			#for rel_y in [-1, 0, 1]:
-				#if rel_x == 0 and rel_y == 0:
-					#continue
-				#var x = i + rel_x
-				#var y = j + rel_y
-				#var new_key = Vector2i(x, y)
-				#if new_key in cells:
-					#letter.add_neighbour(cells[new_key])
+	var sequences = get_letter_sequences(start_word, letter_index, 1)
+
+	letter_index[""] = []
+	update_board_with_word(start_word, sequences[0], letter_index)
+
+	for location in sequences[0]:
+		var neighbours = get_neighbours(location)
+		for neighbour in neighbours:
+			if neighbour not in letter_index[""]:
+				letter_index[""].append(neighbour)
+
+	for j in range(10):
+		var word = big_words[randi_range(0, len(big_words) - 1)]
+		sequences = get_letter_sequences(word, letter_index, 1)
+		if len(sequences) > 0:
+			update_board_with_word(word, sequences[0], letter_index)
+
+
+func update_board_with_word(word: String, sequence: Array, letter_index: Dictionary):
+	print("Updating board with word: ", word)
+	print("Board before ", cell_letters)
+	var i = 0
+	for location in sequence:
+		cell_letters[location] = word[i]
+		if word[i] not in letter_index:
+			letter_index[word[i]] = [location]
+		else:
+			letter_index[word[i]].append(location)
+		i += 1
+	print("Board after ", cell_letters)
+	
+
 
 const WILDCARD_LOCATIONS = {
 	Vector2i(1, 1): null, Vector2i(1, 5): null, Vector2i(1, 9): null,
@@ -199,47 +216,15 @@ func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences:
 			while indexes[-1] >= len(word_letters[len(indexes) - 1]):
 				indexes.pop_back()
 				if len(indexes) == 0:
-					print("Found sequences while popping", sequences)
+					#print("Found sequences while popping", sequences)
 					return sequences
 				
 				indexes[-1] += 1
 		else:
 			indexes.append(0)
 
-	print("Found sequences", sequences)
+	#print("Found sequences", sequences)
 	return sequences
-
-#func get_letter_sequences_old(word: String, letter_index: Dictionary) -> Array:
-	#var word_letters
-	#if word[0] in letter_index:
-		#word_letters = letter_index[word[0]] + letter_index[""]
-	#else:
-		#word_letters = letter_index[""]
-#
-	#var sequences = []
-	#for letter in word_letters:
-		#sequences.append([letter])
-	#
-	#print("Letter sequences", sequences)
-	#for c in word.substr(1):
-		#var new_letter_sequences = []
-		#for letter_sequence in sequences:
-			#var current: Letter = letter_sequence[-1]
-			#var valid_neighbours = []
-			#for neighbour in get_neighbours(current.location, cell_index):
-				#if neighbour.letter == c or neighbour.letter == "": 
-					#var dup = false
-					#for letter in letter_sequence:
-						#if letter == neighbour:
-							#dup = true
-					##var dup = neighbour in letter_sequence
-					#if not dup:
-						#var new_letter_sequence = letter_sequence.duplicate()
-						#new_letter_sequence.append(neighbour)
-						#new_letter_sequences.append(new_letter_sequence)
-		#sequences = new_letter_sequences
-	#return sequences
-
 
 
 func update_with_word(word: String, letter_sequences: Array):
