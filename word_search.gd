@@ -172,6 +172,7 @@ func _input(event: InputEvent) -> void:
 
 
 func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences: int) -> Array:
+	print("Getting letter sequences: ", letter_index)
 	var sequences = []
 	var indexes = [0]
 
