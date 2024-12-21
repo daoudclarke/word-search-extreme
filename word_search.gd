@@ -51,30 +51,35 @@ func initialise_board():
 	
 	var sequences = get_letter_sequences(start_word, letter_index, 1)
 
-	
-	update_board_with_word(start_word, sequences[0], letter_index)
+	var found_locations = {}
+	update_board_with_word(start_word, sequences[0], letter_index, found_locations)
 
-	for j in range(1):
-		for location in sequences[0]:
-			var neighbours = get_neighbours(location)
-			for neighbour in neighbours:
-				if neighbour not in letter_index[""]:
-					letter_index[""].append(neighbour)
+	for j in range(50):
+		if len(sequences) > 0:
+			for location in sequences[0]:
+				var neighbours = get_neighbours(location)
+				for neighbour in neighbours:
+					if neighbour not in found_locations:
+						letter_index[""].append(neighbour)
+
+		if len(letter_index[""]) == 0:
+			print("Board is covered")
+			break
 
 		var word = big_words[randi_range(0, len(big_words) - 1)]
 		sequences = get_letter_sequences(word, letter_index, 1)
 		if len(sequences) > 0:
-			update_board_with_word(word, sequences[0], letter_index)
+			update_board_with_word(word, sequences[0], letter_index, found_locations)
 	
 	for k in letter_index:
 		for location in letter_index[k]:
 			cell_letters[location] = k
 
 
-func update_board_with_word(word: String, sequence: Array, letter_index: Dictionary):
+func update_board_with_word(word: String, sequence: Array, letter_index: Dictionary, found_locations: Dictionary):
 	print("Updating board with word: ", word)
-	print("Using sequence: ", sequence)
-	print("Board before ", letter_index)
+	#print("Using sequence: ", sequence)
+	#print("Board before ", letter_index)
 	var i = 0
 	for location in sequence:
 		if word[i] not in letter_index:
@@ -82,13 +87,15 @@ func update_board_with_word(word: String, sequence: Array, letter_index: Diction
 		else:
 			letter_index[word[i]].append(location)
 		i += 1
+		found_locations[location] = null
 
 	var new_wildcards = []
 	for location in letter_index[""]:
 		if location not in sequence:
 			new_wildcards.append(location)
 	letter_index[""] = new_wildcards
-	print("Board after ", letter_index)
+		
+	#print("Board after ", letter_index)
 	
 
 
@@ -133,7 +140,8 @@ func get_neighbours(location: Vector2i) -> Array[Vector2i]:
 	var neighbours: Array[Vector2i] = []
 	for relative in RELATIVES:
 		var new_key = location + relative
-		neighbours.append(new_key)
+		if new_key.x >= 0 and new_key.y >= 0 and new_key.x < SIZE.x and new_key.y < SIZE.y:
+			neighbours.append(new_key)
 	return neighbours
 
 
@@ -182,7 +190,7 @@ func _input(event: InputEvent) -> void:
 
 
 func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences: int) -> Array:
-	print("Getting letter sequences: ", letter_index)
+	#print("Getting letter sequences: ", letter_index)
 	var sequences = []
 	var indexes = [0]
 
