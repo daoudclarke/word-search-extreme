@@ -16,6 +16,7 @@ var dictionary: Dictionary = {}
 var letter_sequences = []
 var start_words = []
 var big_words = []
+var start_letter_words: Dictionary = {}
 
 
 # Called when the node enters the scene tree for the first time.
@@ -26,9 +27,18 @@ func _ready() -> void:
 		dictionary[line] = null
 		if len(line) == 9:
 			start_words.append(line)
-		if len(line) >= 7 and len(line) <= 10:
+		if len(line) >= 6 and len(line) <= 10:
 			big_words.append(line)
-
+			var start_letters = {}
+			for indexes in [[0, 1], [0, 2], [1, 2]]:
+				var start_pair = [line[indexes[0]], line[indexes[1]]]
+				start_pair.sort()
+				if start_pair in start_letter_words:
+					start_letter_words[start_pair].append(line)
+				else:
+					start_letter_words[start_pair] = [line]
+				
+	#print("Start letter words", start_letter_words[["A", "B"]])
 	initialise_board()
 
 	var delay = 0.0
@@ -51,8 +61,8 @@ func initialise_board():
 	
 	var sequences = get_letter_sequences(start_word, letter_index, 1)
 
-	var found_locations = {}
-	update_board_with_word(start_word, sequences[0], letter_index, found_locations)
+	var found_letters = {}
+	update_board_with_word(start_word, sequences[0], letter_index, found_letters)
 
 	var num_words_added = 0
 	for j in range(50000):
@@ -60,25 +70,50 @@ func initialise_board():
 			for location in sequences[0]:
 				var neighbours = get_neighbours(location)
 				for neighbour in neighbours:
-					if neighbour not in found_locations:
+					if neighbour not in found_letters:
 						letter_index[""].append(neighbour)
 
 		if len(letter_index[""]) == 0:
 			print("Board is covered with words: ", num_words_added)
 			break
+#
+		var index = randi_range(0, len(letter_index[""]) - 1)
+		var location = letter_index[""][index]
+		var neighbours = get_neighbours(location)
+		neighbours.shuffle()
+		var letters = []
+		for neighbour in neighbours:
+			if neighbour in found_letters:
+				var letter = found_letters[neighbour]
+				letters.append(letter)
+				if len(letters) >= 2:
+					break
+		
+		if len(letters) != 2:
+			continue
+		
+		letters.sort()
 
-		var word = big_words[randi_range(0, len(big_words) - 1)]
+		if letters not in start_letter_words:
+			continue
+
+		var word_choices = start_letter_words[letters]
+		var word = word_choices[randi_range(0, len(word_choices) - 1)]
+
+		#var word = big_words[randi_range(0, len(big_words) - 1)]
 		sequences = get_letter_sequences(word, letter_index, 1, 1000)
 		if len(sequences) > 0:
-			update_board_with_word(word, sequences[0], letter_index, found_locations)
+			update_board_with_word(word, sequences[0], letter_index, found_letters)
 			num_words_added += 1
 	
-	for k in letter_index:
-		for location in letter_index[k]:
-			cell_letters[location] = k
+	
+	cell_letters = found_letters
+	#for k in letter_index:
+		#for location in letter_index[k]:
+			#cell_letters[location] = k
 
 
-func update_board_with_word(word: String, sequence: Array, letter_index: Dictionary, found_locations: Dictionary):
+func update_board_with_word(word: String, sequence: Array, letter_index: Dictionary, found_letters: Dictionary):
 	print("Updating board with word: ", word)
 	#print("Using sequence: ", sequence)
 	#print("Board before ", letter_index)
@@ -88,8 +123,8 @@ func update_board_with_word(word: String, sequence: Array, letter_index: Diction
 			letter_index[word[i]] = [location]
 		else:
 			letter_index[word[i]].append(location)
+		found_letters[location] = word[i]
 		i += 1
-		found_locations[location] = null
 
 	var new_wildcards = []
 	for location in letter_index[""]:
