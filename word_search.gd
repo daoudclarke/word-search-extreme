@@ -54,7 +54,7 @@ func initialise_board():
 	var found_locations = {}
 	update_board_with_word(start_word, sequences[0], letter_index, found_locations)
 
-	for j in range(50):
+	for j in range(50000):
 		if len(sequences) > 0:
 			for location in sequences[0]:
 				var neighbours = get_neighbours(location)
@@ -67,7 +67,7 @@ func initialise_board():
 			break
 
 		var word = big_words[randi_range(0, len(big_words) - 1)]
-		sequences = get_letter_sequences(word, letter_index, 1)
+		sequences = get_letter_sequences(word, letter_index, 1, 1000)
 		if len(sequences) > 0:
 			update_board_with_word(word, sequences[0], letter_index, found_locations)
 	
@@ -189,19 +189,23 @@ func _input(event: InputEvent) -> void:
 					letter.set_status(1)
 
 
-func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences: int) -> Array:
+func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences: int, max_tries: int = -1) -> Array:
 	#print("Getting letter sequences: ", letter_index)
 	var sequences = []
 	var indexes = [0]
+	
+	for k in letter_index:
+		letter_index[k].shuffle()
 
 	var word_letters = []
 	for i in range(len(word)):
-		var letters_for_word = letter_index.get(word[i], []) + letter_index.get("", [])
+		#var letters_for_word = letter_index.get(word[i], []) + letter_index.get("", [])
+		var letters_for_word = letter_index.get("", []) + letter_index.get(word[i], [])
 		if len(letters_for_word) == 0:
 			return []
 		word_letters.append(letters_for_word)
 		
-
+	var tries = 0
 	while true:
 		var i = len(indexes) - 1
 		var letter = word[i]
@@ -241,6 +245,10 @@ func get_letter_sequences(word: String, letter_index: Dictionary, max_sequences:
 				indexes[-1] += 1
 		else:
 			indexes.append(0)
+		
+		tries += 1
+		if max_tries > 0 and tries >= max_tries:
+			return sequences
 
 	#print("Found sequences", sequences)
 	return sequences
