@@ -54,6 +54,7 @@ func initialise_board():
 	var found_locations = {}
 	update_board_with_word(start_word, sequences[0], letter_index, found_locations)
 
+	var num_words_added = 0
 	for j in range(50000):
 		if len(sequences) > 0:
 			for location in sequences[0]:
@@ -63,13 +64,14 @@ func initialise_board():
 						letter_index[""].append(neighbour)
 
 		if len(letter_index[""]) == 0:
-			print("Board is covered")
+			print("Board is covered with words: ", num_words_added)
 			break
 
 		var word = big_words[randi_range(0, len(big_words) - 1)]
 		sequences = get_letter_sequences(word, letter_index, 1, 1000)
 		if len(sequences) > 0:
 			update_board_with_word(word, sequences[0], letter_index, found_locations)
+			num_words_added += 1
 	
 	for k in letter_index:
 		for location in letter_index[k]:
